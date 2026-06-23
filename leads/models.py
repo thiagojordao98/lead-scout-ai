@@ -31,3 +31,17 @@ class Lead(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class AuditResult(models.Model):
+    lead = models.OneToOneField(Lead, on_delete=models.CASCADE, related_name='audit')
+    has_website = models.BooleanField(default=False)
+    has_ssl = models.BooleanField(default=False)
+    has_professional_email = models.BooleanField(default=False)
+    score = models.PositiveIntegerField(default=0)
+    details = models.JSONField(default=dict)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Audit for {self.lead.name} (Score: {self.score})"
+

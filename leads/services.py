@@ -1,6 +1,9 @@
 import logging
+import re
+from urllib.parse import urlparse
 import requests
 from django.conf import settings
+from leads.models import AuditResult
 
 logger = logging.getLogger(__name__)
 
@@ -71,3 +74,87 @@ class SerperClient:
                 "address": f"Rua do Prado, 45 - {localizacao}"
             }
         ]
+
+
+class AuditService:
+    GENERIC_DOMAINS = {
+        "gmail.com", "hotmail.com", "yahoo.com", "yahoo.com.br", 
+        "outlook.com", "live.com", "aol.com", "terra.com.br", "uol.com.br",
+        "icloud.com", "bol.com.br", "ig.com.br"
+    }
+
+    def audit_lead(self, lead) -> AuditResult:
+        has_website = False
+        has_ssl = False
+        has_professional_email = False
+        emails_found = []
+        details = {}
+
+        if not lead.website:
+            score = 100  # No website (+50), No SSL (+30), No professional email (+20)
+            details["reason"] = "Sem website cadastrado."
+        else:
+            has_website = True
+            cleaned_url = self._clean_url(lead.website)
+            
+            # Check HTTPS / SSL
+            try:
+                ssl_response = requests.get(f"https://{cleaned_url}", timeout=5)
+                has_ssl = True
+                details["https_status"] = ssl_response.status_code
+            except Exception as e:
+                has_ssl = False
+                details["ssl_error"] = str(e)
+
+            # Fetch Content and Scrape Emails
+            target_url = f"https://{cleaned_url}" if has_ssl else f"http://{cleaned_url}"
+            try:
+                page_response = requests.get(target_url, timeout=5)
+                html_content = page_response.text
+                emails_found = list(set(re.findall(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', html_content)))
+                details["scraped_emails"] = emails_found
+            except Exception as e:
+                details["scrape_error"] = str(e)
+
+            # Email evaluation
+            professional_found = False
+            if emails_found:
+                for email in emails_found:
+                    domain = email.split('@')[-1].lower()
+                    if domain not in self.GENERIC_DOMAINS:
+                        professional_found = True
+                        if not lead.email:
+                            lead.email = email
+                            lead.save(update_fields=['email'])
+                        break
+
+            has_professional_email = professional_found
+
+            # Scoring
+            score = 0
+            if not has_ssl:
+                score += 30
+            if not has_professional_email:
+                score += 20
+
+        # Update lead is_hot field
+        lead.is_hot = (score == 100)
+        lead.save(update_fields=['is_hot'])
+
+        audit_result, _ = AuditResult.objects.update_or_create(
+            lead=lead,
+            defaults={
+                "has_website": has_website,
+                "has_ssl": has_ssl,
+                "has_professional_email": has_professional_email,
+                "score": score,
+                "details": details
+            }
+        )
+        return audit_result
+
+    def _clean_url(self, url):
+        parsed = urlparse(url)
+        netloc = parsed.netloc or parsed.path.split('/')[0]
+        return netloc.replace("www.", "")
+
