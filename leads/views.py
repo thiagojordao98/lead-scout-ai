@@ -19,18 +19,21 @@ def search_studio_view(request):
             })
 
         with transaction.atomic():
-            org.refresh_from_db()
-            if org.credits_balance < 1:
+            from accounts.models import Organization
+            locked_org = Organization.objects.select_for_update().get(id=org.id)
+            if locked_org.credits_balance < 1:
                 return render(request, "leads/search_studio.html", {
                     "paywall": True,
-                    "credits_balance": org.credits_balance
+                    "credits_balance": locked_org.credits_balance
                 })
             
-            org.credits_balance -= 1
-            org.save(update_fields=["credits_balance"])
+            locked_org.credits_balance -= 1
+            locked_org.save(update_fields=["credits_balance"])
+            
+            org.credits_balance = locked_org.credits_balance
             
             query = SearchQuery.objects.create(
-                organization=org,
+                organization=locked_org,
                 user=request.user,
                 nicho=nicho,
                 localizacao=localizacao,
