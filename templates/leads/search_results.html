@@ -214,17 +214,35 @@
                         </span>
                     </td>
 
-                    <!-- Hot Lead Status -->
+                    <!-- Hot Lead Status & CRM Action -->
                     <td class="p-4 text-center">
-                        {% if lead.is_hot %}
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-red-500/20 to-orange-500/20 text-orange-400 border border-orange-500/30 animate-pulse">
-                            🔥 Hot
-                        </span>
-                        {% else %}
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700/60">
-                            Frio
-                        </span>
-                        {% endif %}
+                        <div class="flex items-center justify-center gap-3">
+                            {% if lead.is_hot %}
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r from-red-500/20 to-orange-500/20 text-orange-400 border border-orange-500/30">
+                                🔥 Hot
+                            </span>
+                            {% else %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700/60">
+                                Frio
+                            </span>
+                            {% endif %}
+                            
+                            {% if lead.pipeline_card %}
+                            <a href="{% url 'leads:crm_kanban' %}" class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-lg border border-emerald-500/20 transition duration-150" title="Ver no CRM">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
+                                </svg>
+                                No CRM
+                            </a>
+                            {% else %}
+                            <a href="{% url 'leads:add_to_pipeline' lead.id %}" class="inline-flex items-center gap-1 px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow-sm shadow-indigo-600/10 transition duration-150" title="Adicionar ao CRM">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                </svg>
+                                CRM
+                            </a>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}

@@ -45,3 +45,24 @@ class AuditResult(models.Model):
     def __str__(self):
         return f"Audit for {self.lead.name} (Score: {self.score})"
 
+
+class PipelineCard(models.Model):
+    STAGE_CHOICES = [
+        ('NOVO', 'Novo'),
+        ('CONTATO', 'Contato'),
+        ('NEGOCIACAO', 'Negociação'),
+        ('FECHADO', 'Fechado'),
+        ('PERDIDO', 'Perdido'),
+    ]
+
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='pipeline_cards')
+    lead = models.OneToOneField(Lead, on_delete=models.CASCADE, related_name='pipeline_card')
+    stage = models.CharField(max_length=20, choices=STAGE_CHOICES, default='NOVO')
+    order = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.lead.name} - {self.stage}"
+
+

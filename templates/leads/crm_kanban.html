@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Pipeline de Vendas (CRM) - LeadScout AI{% endblock %}
+
+{% block body_class %}min-h-screen bg-slate-950 text-slate-100{% endblock %}
+
+{% block wrapper_class %}w-full max-w-7xl rounded-2xl bg-slate-900/40 p-6 md:p-8 shadow-2xl border border-slate-800/80 text-white my-8{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800/60 pb-6">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1.5">
+                <span class="inline-block w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                CRM de Vendas
+            </div>
+            <h2 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Pipeline de Leads
+            </h2>
+            <p class="text-sm text-slate-400 mt-1">
+                Gerencie suas oportunidades de vendas. Arraste e solte os cards para mudar o estágio.
+            </p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="{% url 'leads:search_studio' %}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-sm font-semibold rounded-xl transition duration-200 shadow-lg shadow-indigo-600/20">
+                Nova Busca
+            </a>
+            <a href="{% url 'accounts:dashboard' %}" class="px-4 py-2 bg-slate-850 hover:bg-slate-800 text-sm font-semibold text-slate-300 rounded-xl border border-slate-800 transition duration-200">
+                Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Kanban Board Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-5 overflow-x-auto pb-4">
+        
+        <!-- NOVO Column -->
+        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+             id="col-NOVO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'NOVO')">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300">Novo</h3>
+                </div>
+                <span class="text-xs bg-slate-800 px-2 py-0.5 rounded-md font-semibold text-slate-400 count-badge">
+                    {{ stages.NOVO|length }}
+                </span>
+            </div>
+            <div class="space-y-3 flex-grow flex flex-col pb-20" id="stage-NOVO">
+                {% for card in stages.NOVO %}
+                    {% include "leads/crm_card_snippet.html" with card=card %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- CONTATO Column -->
+        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+             id="col-CONTATO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'CONTATO')">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300">Contato</h3>
+                </div>
+                <span class="text-xs bg-slate-800 px-2 py-0.5 rounded-md font-semibold text-slate-400 count-badge">
+                    {{ stages.CONTATO|length }}
+                </span>
+            </div>
+            <div class="space-y-3 flex-grow flex flex-col pb-20" id="stage-CONTATO">
+                {% for card in stages.CONTATO %}
+                    {% include "leads/crm_card_snippet.html" with card=card %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- NEGOCIACAO Column -->
+        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+             id="col-NEGOCIACAO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'NEGOCIACAO')">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300">Negociação</h3>
+                </div>
+                <span class="text-xs bg-slate-800 px-2 py-0.5 rounded-md font-semibold text-slate-400 count-badge">
+                    {{ stages.NEGOCIACAO|length }}
+                </span>
+            </div>
+            <div class="space-y-3 flex-grow flex flex-col pb-20" id="stage-NEGOCIACAO">
+                {% for card in stages.NEGOCIACAO %}
+                    {% include "leads/crm_card_snippet.html" with card=card %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- FECHADO Column -->
+        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+             id="col-FECHADO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'FECHADO')">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300">Fechado</h3>
+                </div>
+                <span class="text-xs bg-slate-800 px-2 py-0.5 rounded-md font-semibold text-slate-400 count-badge">
+                    {{ stages.FECHADO|length }}
+                </span>
+            </div>
+            <div class="space-y-3 flex-grow flex flex-col pb-20" id="stage-FECHADO">
+                {% for card in stages.FECHADO %}
+                    {% include "leads/crm_card_snippet.html" with card=card %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- PERDIDO Column -->
+        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+             id="col-PERDIDO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'PERDIDO')">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                    <h3 class="font-bold text-xs uppercase tracking-wider text-slate-300">Perdido</h3>
+                </div>
+                <span class="text-xs bg-slate-800 px-2 py-0.5 rounded-md font-semibold text-slate-400 count-badge">
+                    {{ stages.PERDIDO|length }}
+                </span>
+            </div>
+            <div class="space-y-3 flex-grow flex flex-col pb-20" id="stage-PERDIDO">
+                {% for card in stages.PERDIDO %}
+                    {% include "leads/crm_card_snippet.html" with card=card %}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .kanban-column.dragover {
+        background-color: rgba(99, 102, 241, 0.08);
+        border-color: rgba(99, 102, 241, 0.4);
+    }
+</style>
+
+<script>
+    function allowDrop(ev) {
+        ev.preventDefault();
+        const col = ev.currentTarget;
+        if (!col.classList.contains('dragover')) {
+            col.classList.add('dragover');
+        }
+    }
+
+    function dragLeave(ev) {
+        ev.currentTarget.classList.remove('dragover');
+    }
+
+    function drag(ev, cardId) {
+        ev.dataTransfer.setData("text/plain", cardId);
+        ev.currentTarget.classList.add('opacity-40');
+    }
+
+    function dragEnd(ev) {
+        ev.currentTarget.classList.remove('opacity-40');
+    }
+
+    async function drop(ev, stageCode) {
+        ev.preventDefault();
+        const col = ev.currentTarget;
+        col.classList.remove('dragover');
+        
+        const cardId = ev.dataTransfer.getData("text/plain");
+        const cardEl = document.getElementById("card-" + cardId);
+        if (!cardEl) return;
+        
+        // Find current stage element
+        const destContainer = document.getElementById("stage-" + stageCode);
+        
+        // Update view counts
+        const sourceStageCode = cardEl.getAttribute('data-stage');
+        if (sourceStageCode !== stageCode) {
+            // Append card
+            destContainer.appendChild(cardEl);
+            cardEl.setAttribute('data-stage', stageCode);
+            
+            updateColumnCounters();
+            
+            // Post update to database
+            const formData = new FormData();
+            formData.append("card_id", cardId);
+            formData.append("stage", stageCode);
+            formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+            
+            try {
+                const response = await fetch("{% url 'leads:update_stage' %}", {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error("Falha ao salvar no servidor");
+                }
+            } catch (err) {
+                console.error("Erro ao atualizar estágio do lead:", err);
+                // Revert reload
+                window.location.reload();
+            }
+        }
+    }
+
+    function updateColumnCounters() {
+        const columns = ['NOVO', 'CONTATO', 'NEGOCIACAO', 'FECHADO', 'PERDIDO'];
+        columns.forEach(code => {
+            const container = document.getElementById("stage-" + code);
+            const count = container.children.length;
+            const badge = container.closest('.kanban-column').querySelector('.count-badge');
+            if (badge) {
+                badge.textContent = count;
+            }
+        });
+    }
+</script>
+{% endblock %}

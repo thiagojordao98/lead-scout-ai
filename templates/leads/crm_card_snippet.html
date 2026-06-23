@@ -1,0 +1,65 @@
+<div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 shadow-md hover:shadow-indigo-500/5 cursor-grab active:cursor-grabbing hover:border-indigo-500/50 hover:shadow-lg transition duration-200" 
+     draggable="true" 
+     ondragstart="drag(event, '{{ card.id }}')" 
+     ondragend="dragEnd(event)"
+     id="card-{{ card.id }}"
+     data-stage="{{ card.stage }}">
+    
+    <!-- Title & Score -->
+    <div class="flex items-start justify-between gap-2">
+        <h4 class="font-bold text-sm text-slate-100 hover:text-indigo-400 transition break-words line-clamp-2">
+            {{ card.lead.name }}
+        </h4>
+        <span class="inline-block text-xs font-extrabold px-1.5 py-0.5 rounded
+            {% if card.lead.audit.score >= 70 %}
+                bg-rose-500/10 text-rose-400 border border-rose-500/20
+            {% elif card.lead.audit.score >= 30 %}
+                bg-amber-500/10 text-amber-400 border border-amber-500/20
+            {% else %}
+                bg-emerald-500/10 text-emerald-400 border border-emerald-500/20
+            {% endif %}" title="Score da Auditoria">
+            {{ card.lead.audit.score|default:0 }}
+        </span>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="mt-3.5 space-y-1.5 text-[11px] text-slate-400">
+        {% if card.lead.phone %}
+        <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+            <span class="truncate">{{ card.lead.phone }}</span>
+        </div>
+        {% endif %}
+
+        {% if card.lead.email %}
+        <div class="flex items-center gap-1.5 text-slate-300">
+            <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            <span class="truncate" title="{{ card.lead.email }}">{{ card.lead.email }}</span>
+        </div>
+        {% endif %}
+
+        {% if card.lead.website %}
+        <div class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            <a href="{{ card.lead.website }}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:text-indigo-300 hover:underline truncate">
+                {{ card.lead.website }}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Hot / Gold Opportunity Badge -->
+    {% if card.lead.is_hot %}
+    <div class="mt-4 flex items-center justify-between border-t border-slate-800/40 pt-3">
+        <span class="inline-flex items-center gap-1 px-2.5 py-0.5 bg-gradient-to-r from-red-500/20 to-orange-500/20 text-orange-400 text-[10px] font-extrabold rounded-full border border-orange-500/30">
+            🔥 Oportunidade Quente
+        </span>
+    </div>
+    {% endif %}
+</div>
