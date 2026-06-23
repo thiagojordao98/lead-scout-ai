@@ -1,5 +1,6 @@
 import logging
 import threading
+from django.db import close_old_connections
 from leads.models import SearchQuery, Lead
 from leads.services import SerperClient, AuditService
 
@@ -14,43 +15,47 @@ except ImportError:
 
 @shared_task
 def process_search_query_task(search_query_id):
+    close_old_connections()
     try:
-        query = SearchQuery.objects.get(id=search_query_id)
-    except SearchQuery.DoesNotExist:
-        return
-    
-    query.status = "PROCESSING"
-    query.save(update_fields=["status"])
+        try:
+            query = SearchQuery.objects.get(id=search_query_id)
+        except SearchQuery.DoesNotExist:
+            return
+        
+        query.status = "PROCESSING"
+        query.save(update_fields=["status"])
 
-    try:
-        client = SerperClient()
-        results = client.search(nicho=query.nicho, localizacao=query.localizacao)
+        try:
+            client = SerperClient()
+            results = client.search(nicho=query.nicho, localizacao=query.localizacao)
+            
+            auditor = AuditService()
+            for r in results:
+                lead, _ = Lead.objects.update_or_create(
+                    organization=query.organization,
+                    place_id=r["place_id"],
+                    defaults={
+                        "search_query": query,
+                        "name": r["name"],
+                        "website": r["website"],
+                        "phone": r["phone"],
+                        "address": r["address"],
+                    }
+                )
+                # Audit lead
+                try:
+                    auditor.audit_lead(lead)
+                except Exception:
+                    logger.exception(f"Erro ao auditar lead {lead.id}")
+            
+            query.status = "COMPLETED"
+        except Exception:
+            logger.exception(f"Falha na busca da query {search_query_id}")
+            query.status = "FAILED"
         
-        auditor = AuditService()
-        for r in results:
-            lead, _ = Lead.objects.update_or_create(
-                organization=query.organization,
-                place_id=r["place_id"],
-                defaults={
-                    "search_query": query,
-                    "name": r["name"],
-                    "website": r["website"],
-                    "phone": r["phone"],
-                    "address": r["address"],
-                }
-            )
-            # Audit lead
-            try:
-                auditor.audit_lead(lead)
-            except Exception:
-                logger.exception(f"Erro ao auditar lead {lead.id}")
-        
-        query.status = "COMPLETED"
-    except Exception:
-        logger.exception(f"Falha na busca da query {search_query_id}")
-        query.status = "FAILED"
-    
-    query.save(update_fields=["status"])
+        query.save(update_fields=["status"])
+    finally:
+        close_old_connections()
 
 def dispatch_search_query(search_query_id):
     try:
@@ -58,7 +63,7 @@ def dispatch_search_query(search_query_id):
         if current_app.conf.broker_url:
             process_search_query_task.delay(search_query_id)
             logger.info(f"Dispatched search query {search_query_id} via Celery.")
-            return
+            return None
     except Exception as e:
         logger.debug(f"Celery dispatch failed: {e}")
 
@@ -67,3 +72,4 @@ def dispatch_search_query(search_query_id):
     thread.daemon = True
     thread.start()
     logger.info(f"Dispatched search query {search_query_id} via daemon Thread.")
+    return thread

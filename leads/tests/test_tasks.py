@@ -50,14 +50,9 @@ class TaskExecutionTest(TransactionTestCase):
             localizacao="Natal, RN",
             status="PENDING"
         )
-        dispatch_search_query(query.id)
-        
-        # Since it runs in a background thread, we wait up to 2 seconds for it to complete.
-        # This is safe and reliable as it uses the mock search client.
-        for _ in range(20):
-            query.refresh_from_db()
-            if query.status in ["COMPLETED", "FAILED"]:
-                break
-            time.sleep(0.1)
+        thread = dispatch_search_query(query.id)
+        if thread:
+            thread.join(timeout=3)
             
+        query.refresh_from_db()
         self.assertEqual(query.status, "COMPLETED")
