@@ -219,5 +219,30 @@
             }
         });
     }
+
+    async function openLeadDetail(leadId) {
+        try {
+            const response = await fetch(`/leads/crm/detail/${leadId}/`);
+            if (response.ok) {
+                const html = await response.text();
+                const container = document.getElementById("modal-container");
+                container.innerHTML = html;
+                
+                // Execute inline scripts inside the injected HTML fragment
+                const scripts = container.querySelectorAll("script");
+                scripts.forEach(script => {
+                    const newScript = document.createElement("script");
+                    newScript.text = script.text;
+                    document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                });
+            } else {
+                console.error("Falha ao carregar detalhes do lead");
+            }
+        } catch (err) {
+            console.error("Erro ao abrir modal do lead:", err);
+        }
+    }
 </script>
+
+<div id="modal-container"></div>
 {% endblock %}

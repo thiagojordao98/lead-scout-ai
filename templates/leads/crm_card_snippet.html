@@ -1,7 +1,8 @@
-<div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 shadow-md hover:shadow-indigo-500/5 cursor-grab active:cursor-grabbing hover:border-indigo-500/50 hover:shadow-lg transition duration-200" 
+<div class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 shadow-md hover:shadow-indigo-500/5 cursor-pointer hover:border-indigo-500/50 hover:shadow-lg transition duration-200" 
      draggable="true" 
      ondragstart="drag(event, '{{ card.id }}')" 
      ondragend="dragEnd(event)"
+     onclick="if(!event.target.closest('a')) openLeadDetail('{{ card.lead.id }}')"
      id="card-{{ card.id }}"
      data-stage="{{ card.stage }}">
     

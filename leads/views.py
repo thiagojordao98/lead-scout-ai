@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.db import transaction
 from .models import SearchQuery, Lead, PipelineCard
 from .tasks import dispatch_search_query
+from .ai import AIScriptGenerator
 
 
 @login_required
@@ -102,4 +103,19 @@ def update_card_stage_view(request):
             card.save(update_fields=["stage"])
             return JsonResponse({"status": "success"})
     return JsonResponse({"status": "error"}, status=400)
+
+
+@login_required
+def lead_detail_modal_view(request, lead_id):
+    lead = get_object_or_404(Lead, id=lead_id, organization=request.user.organization)
+    audit = getattr(lead, 'audit', None)
+    return render(request, "leads/lead_detail_modal.html", {"lead": lead, "audit": audit})
+
+
+@login_required
+def generate_sales_script_view(request, lead_id):
+    lead = get_object_or_404(Lead, id=lead_id, organization=request.user.organization)
+    generator = AIScriptGenerator()
+    script = generator.generate(lead)
+    return JsonResponse({"script": script})
 
