@@ -13,7 +13,7 @@ from django.utils import timezone
 from plans.models import UserPlan
 
 from .forms import LoginForm, RegisterForm
-from .models import User
+from .models import Organization, User
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -34,7 +34,11 @@ def register_view(request):
 
     form = RegisterForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
-        user = form.save()
+        user = form.save(commit=False)
+        org = Organization.objects.create(name=f"Agência {user.email}", credits_balance=10)
+        user.organization = org
+        user.role = "OWNER"
+        user.save()
         login(request, user)
         messages.success(request, "Cadastro realizado com sucesso.")
         return redirect("accounts:dashboard")
