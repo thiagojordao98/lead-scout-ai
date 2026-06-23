@@ -1,13 +1,16 @@
-import os
+import logging
 import requests
 from django.conf import settings
 
+logger = logging.getLogger(__name__)
+
 class SerperClient:
     def __init__(self, api_key=None):
-        self.api_key = api_key or os.getenv("SERPER_API_KEY", "")
+        self.api_key = api_key or getattr(settings, "SERPER_API_KEY", "")
 
     def search(self, nicho, localizacao):
         if not self.api_key:
+            logger.info("Chave SERPER_API_KEY não configurada. Ativando modo simulador/mock.")
             return self._get_mock_results(nicho, localizacao)
         
         url = "https://google.serper.dev/maps"
@@ -23,6 +26,10 @@ class SerperClient:
         try:
             response = requests.post(url, json=payload, headers=headers, timeout=10)
             if response.status_code != 200:
+                logger.warning(
+                    f"Falha na requisição Serper API. Status: {response.status_code}. "
+                    f"Resposta: {response.text[:200]}. Ativando mock fallback."
+                )
                 return self._get_mock_results(nicho, localizacao)
             data = response.json()
             places = data.get("places", [])
@@ -37,6 +44,7 @@ class SerperClient:
                 })
             return results
         except Exception:
+            logger.exception("Erro de conexão ou parse na Serper API. Ativando mock fallback.")
             return self._get_mock_results(nicho, localizacao)
 
     def _get_mock_results(self, nicho, localizacao):

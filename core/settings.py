@@ -163,6 +163,7 @@ INTERNAL_IPS = ["127.0.0.1"]
 CLIENT_ID_SENDPULSE = config("CLIENT_ID_SENDPULSE", default="")
 CLIENT_SECRET_SENDPULSE = config("CLIENT_SECRET_SENDPULSE", default="")
 ZOUTI_WEBHOOK_SECRET = config("ZOUTI_WEBHOOK_SECRET", default="")
+SERPER_API_KEY = config("SERPER_API_KEY", default="")
 EMAIL_BACKEND = os.getenv("DJANGO_EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "contato@tjmcpro.com")
 
