@@ -10,6 +10,8 @@ from django.db.models.functions import Coalesce, TruncMonth
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
+from django.db import transaction
+
 from plans.models import UserPlan
 
 from .forms import LoginForm, RegisterForm
@@ -34,11 +36,13 @@ def register_view(request):
 
     form = RegisterForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
-        user = form.save(commit=False)
-        org = Organization.objects.create(name=f"Agência {user.email}", credits_balance=10)
-        user.organization = org
-        user.role = "OWNER"
-        user.save()
+        with transaction.atomic():
+            user = form.save(commit=False)
+            org = Organization.objects.create(name=f"Agência {user.email}", credits_balance=10)
+            user.organization = org
+            user.role = "OWNER"
+            user.save()
+            form.save_m2m()
         login(request, user)
         messages.success(request, "Cadastro realizado com sucesso.")
         return redirect("accounts:dashboard")
