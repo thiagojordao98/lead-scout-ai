@@ -6,9 +6,9 @@
     <title>{% block title %}Autenticacao{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-slate-100 text-slate-900">
+<body class="{% block body_class %}min-h-screen bg-slate-100 text-slate-900{% endblock %}">
     <main class="mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center p-6">
-        <div class="w-full max-w-md rounded-xl bg-white p-8 shadow-lg shadow-slate-200">
+        <div class="{% block wrapper_class %}w-full max-w-md rounded-xl bg-white p-8 shadow-lg shadow-slate-200{% endblock %}">
             {% if messages %}
                 <div class="mb-4 space-y-2">
                     {% for message in messages %}

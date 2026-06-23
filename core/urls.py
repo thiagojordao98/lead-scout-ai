@@ -6,7 +6,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("auth/", include("accounts.urls")),
     path("webhooks/", include("plans.urls")),
-
+    path("leads/", include("leads.urls")),
 ]
 
 if settings.DEBUG and settings.HAS_DEBUG_TOOLBAR:
