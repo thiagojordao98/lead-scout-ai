@@ -56,7 +56,7 @@ def search_status_view(request, query_id):
 @login_required
 def search_results_view(request, query_id):
     query = get_object_or_404(SearchQuery, id=query_id, organization=request.user.organization)
-    leads = Lead.objects.filter(search_query=query).select_related('audit').order_by('-audit__score')
+    leads = Lead.objects.filter(search_query=query).select_related('audit', 'pipeline_card').order_by('-audit__score')
     return render(request, "leads/search_results.html", {"query": query, "leads": leads})
 
 
