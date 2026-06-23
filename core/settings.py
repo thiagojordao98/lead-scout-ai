@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'plans',
+    'leads',
 ]
 
 HAS_WHITENOISE = importlib.util.find_spec("whitenoise") is not None
