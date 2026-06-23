@@ -29,8 +29,7 @@ class AuditServiceTest(TestCase):
                 self.status_code = status_code
 
         mock_get.side_effect = [
-            MockResponse("", status_code=200),  # SSL probe
-            MockResponse("Contact us at info@cleancompany.com or sales@cleancompany.com", status_code=200)  # scrape
+            MockResponse("Contact us at info@cleancompany.com or sales@cleancompany.com", status_code=200)
         ]
 
         lead = Lead.objects.create(organization=self.org, name="Clean Co", website="https://cleancompany.com")
@@ -80,8 +79,7 @@ class AuditServiceTest(TestCase):
                 self.status_code = status_code
 
         mock_get.side_effect = [
-            MockResponse("", status_code=200),  # SSL probe
-            MockResponse("Contact us at business@gmail.com", status_code=200)  # scrape
+            MockResponse("Contact us at business@gmail.com", status_code=200)
         ]
 
         lead = Lead.objects.create(organization=self.org, name="Gmail Co", website="https://gmailco.com")
@@ -96,8 +94,7 @@ class AuditServiceTest(TestCase):
         
         # Lead email should NOT be set to the generic email according to brief (we only set professional emails to lead.email)
         lead.refresh_from_db()
-        self.assertNilOrEmpty = lambda x: self.assertTrue(not x)
-        self.assertNilOrEmpty(lead.email)
+        self.assertFalse(lead.email)
 
     @patch('requests.get')
     def test_audit_lead_no_ssl_and_generic_email(self, mock_get):
@@ -137,4 +134,4 @@ class AuditServiceTest(TestCase):
         self.assertFalse(lead.is_hot)
         
         self.assertIn("ssl_error", audit_res.details)
-        self.assertIn("scrape_error", audit_res.details)
+        self.assertIn("http_error", audit_res.details)

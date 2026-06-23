@@ -89,6 +89,7 @@ class AuditService:
         has_professional_email = False
         emails_found = []
         details = {}
+        email_to_update = None
 
         if not lead.website:
             score = 100  # No website (+50), No SSL (+30), No professional email (+20)
@@ -96,25 +97,30 @@ class AuditService:
         else:
             has_website = True
             cleaned_url = self._clean_url(lead.website)
+            html_content = ""
             
             # Check HTTPS / SSL
             try:
                 ssl_response = requests.get(f"https://{cleaned_url}", timeout=5)
                 has_ssl = True
                 details["https_status"] = ssl_response.status_code
+                html_content = ssl_response.text
             except Exception as e:
                 has_ssl = False
                 details["ssl_error"] = str(e)
 
-            # Fetch Content and Scrape Emails
-            target_url = f"https://{cleaned_url}" if has_ssl else f"http://{cleaned_url}"
-            try:
-                page_response = requests.get(target_url, timeout=5)
-                html_content = page_response.text
+            # Fetch Content and Scrape Emails if SSL failed
+            if not has_ssl:
+                try:
+                    page_response = requests.get(f"http://{cleaned_url}", timeout=5)
+                    html_content = page_response.text
+                    details["http_status"] = page_response.status_code
+                except Exception as e:
+                    details["http_error"] = str(e)
+
+            if html_content:
                 emails_found = list(set(re.findall(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', html_content)))
                 details["scraped_emails"] = emails_found
-            except Exception as e:
-                details["scrape_error"] = str(e)
 
             # Email evaluation
             professional_found = False
@@ -124,8 +130,7 @@ class AuditService:
                     if domain not in self.GENERIC_DOMAINS:
                         professional_found = True
                         if not lead.email:
-                            lead.email = email
-                            lead.save(update_fields=['email'])
+                            email_to_update = email
                         break
 
             has_professional_email = professional_found
@@ -137,9 +142,13 @@ class AuditService:
             if not has_professional_email:
                 score += 20
 
-        # Update lead is_hot field
+        # Update lead fields in a single save call
+        fields_to_update = ['is_hot']
         lead.is_hot = (score == 100)
-        lead.save(update_fields=['is_hot'])
+        if email_to_update:
+            lead.email = email_to_update
+            fields_to_update.append('email')
+        lead.save(update_fields=fields_to_update)
 
         audit_result, _ = AuditResult.objects.update_or_create(
             lead=lead,
