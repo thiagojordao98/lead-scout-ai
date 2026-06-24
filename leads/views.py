@@ -37,7 +37,7 @@ def search_studio_view(request):
     if request.method == "POST":
         if show_limit_modal:
             return render(request, "leads/search_studio.html", {
-                "error": "Você atingiu o limite de 3 buscas diárias grátis por IP hoje.",
+                "error": "Você atingiu o limite de 3 buscas diárias grátis.",
                 "credits_balance": org.credits_balance,
                 "show_limit_modal": True
             })
