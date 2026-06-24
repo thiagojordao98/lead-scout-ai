@@ -5,6 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}LeadScout AI{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {}
+            }
+        }
+    </script>
+    <script>
+        // Check local storage or system preference to apply correct class to html element immediately
+        (function() {
+            const theme = localStorage.getItem('theme') || 'system';
+            if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -12,50 +31,107 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
-        /* Custom scrollbar para preservar estética dark */
+        /* Custom scrollbar responsive/toggleable */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .dark ::-webkit-scrollbar-track {
             background: #020617;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e293b;
+            background: #cbd5e1;
             border-radius: 9999px;
         }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+        }
         ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
             background: #334155;
         }
     </style>
 </head>
-<body class="{% block body_class %}min-h-screen bg-slate-950 text-slate-200 font-sans antialiased selection:bg-emerald-500/30{% endblock %}">
+<body class="{% block body_class %}min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-200 font-sans antialiased selection:bg-emerald-500/30 transition-colors duration-300{% endblock %}">
     <!-- Navbar Desktop -->
     {% if user.is_authenticated %}
-    <nav class="hidden md:flex items-center justify-between py-4 px-8 bg-slate-950/40 backdrop-blur-md border-b border-white/5 fixed top-0 left-0 right-0 z-50">
+    <nav class="hidden md:flex items-center justify-between py-4 px-8 bg-white/70 dark:bg-slate-950/40 backdrop-blur-md border-b border-slate-200 dark:border-white/5 fixed top-0 left-0 right-0 z-50 transition-colors duration-300">
         <div class="flex items-center gap-2">
-            <span class="font-extrabold bg-gradient-to-r from-emerald-400 via-green-400 to-lime-400 bg-clip-text text-transparent text-lg">LeadScout AI</span>
+            <span class="font-extrabold bg-gradient-to-r from-emerald-500 via-green-500 to-lime-500 bg-clip-text text-transparent text-lg">LeadScout AI</span>
         </div>
         <div class="flex items-center gap-8">
-            <a href="{% url 'leads:search_studio' %}" class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition">Search Studio</a>
-            <a href="{% url 'leads:crm_kanban' %}" class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition">CRM Kanban</a>
-            <a href="{% url 'accounts:payments_settings' %}" class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition">Planos</a>
-            <a href="{% url 'accounts:dashboard' %}" class="text-sm font-medium text-slate-400 hover:text-emerald-400 transition">Dashboard</a>
+            <a href="{% url 'leads:search_studio' %}" class="text-sm font-medium text-slate-650 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition">Search Studio</a>
+            <a href="{% url 'leads:crm_kanban' %}" class="text-sm font-medium text-slate-650 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition">CRM Kanban</a>
+            <a href="{% url 'accounts:payments_settings' %}" class="text-sm font-medium text-slate-650 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition">Planos</a>
+            <a href="{% url 'accounts:dashboard' %}" class="text-sm font-medium text-slate-650 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition">Dashboard</a>
         </div>
         <div class="flex items-center gap-4">
-            <span class="text-xs text-slate-500">{{ user.email }}</span>
-            <a href="{% url 'accounts:logout' %}" class="text-xs font-semibold text-rose-400 hover:text-rose-300 transition">Sair</a>
+            <!-- Theme Toggle Desktop (Inside Navbar) -->
+            <div class="relative inline-block text-left theme-toggle-container">
+                <button type="button" class="theme-toggle-btn flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-900/80 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 ring-1 ring-slate-200/50 dark:ring-white/10 transition-all duration-200 focus:outline-none" aria-label="Mudar tema">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 hidden theme-icon-light"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 hidden theme-icon-dark"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 hidden theme-icon-system"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                </button>
+                <div class="theme-dropdown hidden absolute right-0 mt-2 w-32 rounded-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl ring-1 ring-slate-200/50 dark:ring-white/10 shadow-lg dark:shadow-2xl z-[100] p-1.5 transition-all origin-top-right transform scale-95 opacity-0">
+                    <button type="button" data-theme-value="light" class="flex items-center gap-2 w-full px-2.5 py-1.5 text-[11px] font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-amber-500"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                        Claro
+                    </button>
+                    <button type="button" data-theme-value="dark" class="flex items-center gap-2 w-full px-2.5 py-1.5 text-[11px] font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-blue-400"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                        Escuro
+                    </button>
+                    <button type="button" data-theme-value="system" class="flex items-center gap-2 w-full px-2.5 py-1.5 text-[11px] font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-slate-400"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                        Sistema
+                    </button>
+                </div>
+            </div>
+            <span class="text-xs text-slate-500 dark:text-slate-400">{{ user.email }}</span>
+            <a href="{% url 'accounts:logout' %}" class="text-xs font-semibold text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 transition">Sair</a>
+            
         </div>
     </nav>
     {% endif %}
 
-    <main class="mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center p-4 md:p-6 {% if user.is_authenticated %}pt-20 pb-24 md:pb-6{% else %}pt-6 pb-6{% endif %} bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-950/20 via-slate-950 to-black">
-        <div class="{% block wrapper_class %}w-full max-w-md relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl p-6 md:p-8 shadow-2xl text-white{% endblock %}">
+    <!-- Floating Theme Selector (visible on mobile, and on desktop for unauthenticated pages) -->
+    <div class="{% if user.is_authenticated %}md:hidden{% endif %} fixed top-4 right-4 z-50">
+        <div class="relative inline-block text-left theme-toggle-container">
+            <button type="button" class="theme-toggle-btn flex items-center justify-center w-9 h-9 rounded-lg bg-white/80 dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 ring-1 ring-slate-200/50 dark:ring-white/10 shadow-md backdrop-blur-sm transition-all duration-200 focus:outline-none" aria-label="Mudar tema">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px] hidden theme-icon-light"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px] hidden theme-icon-dark"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-[18px] h-[18px] hidden theme-icon-system"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+            </button>
+            <div class="theme-dropdown hidden absolute right-0 mt-2 w-32 rounded-xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl ring-1 ring-slate-200/50 dark:ring-white/10 shadow-lg dark:shadow-2xl z-[100] p-1.5 transition-all origin-top-right transform scale-95 opacity-0">
+                <button type="button" data-theme-value="light" class="flex items-center gap-2.5 w-full px-2.5 py-2 text-xs font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-amber-500"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+                    Claro
+                </button>
+                <button type="button" data-theme-value="dark" class="flex items-center gap-2.5 w-full px-2.5 py-2 text-xs font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-blue-400"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                    Escuro
+                </button>
+                <button type="button" data-theme-value="system" class="flex items-center gap-2.5 w-full px-2.5 py-2 text-xs font-semibold rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-slate-400"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
+                    Sistema
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <main class="mx-auto flex min-h-screen w-full max-w-7xl items-center justify-center p-4 md:p-6 {% if user.is_authenticated %}pt-20 pb-24 md:pb-6{% else %}pt-6 pb-6{% endif %} bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-500/5 via-slate-50 to-slate-100 dark:from-emerald-950/20 dark:via-slate-950 dark:to-black transition-colors duration-300">
+        <div class="{% block wrapper_class %}w-full max-w-md relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl ring-1 ring-slate-200/50 dark:ring-white/10 rounded-2xl p-6 md:p-8 shadow-2xl text-slate-900 dark:text-white transition-all duration-300{% endblock %}">
             {% if messages %}
                 <div class="mb-4 space-y-2">
                     {% for message in messages %}
-                        <div class="rounded-lg bg-emerald-500/10 ring-1 ring-emerald-500/30 px-4 py-3 text-sm text-emerald-300 flex items-center gap-2">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <div class="rounded-lg bg-emerald-500/10 ring-1 ring-emerald-500/30 px-4 py-3 text-sm text-emerald-600 dark:text-emerald-300 flex items-center gap-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -68,20 +144,20 @@
 
     <!-- Bottom Nav Mobile -->
     {% if user.is_authenticated %}
-    <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-slate-950/80 backdrop-blur-lg border-t border-white/5 px-6 py-2 flex justify-around items-center">
-        <a href="{% url 'leads:search_studio' %}" class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-emerald-400 transition py-3 px-4">
+    <div class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg border-t border-slate-200 dark:border-white/5 px-6 py-2 flex justify-around items-center transition-colors duration-300">
+        <a href="{% url 'leads:search_studio' %}" class="flex flex-col items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition py-3 px-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <span class="text-[10px] font-medium tracking-wide">Busca</span>
         </a>
-        <a href="{% url 'leads:crm_kanban' %}" class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-emerald-400 transition py-3 px-4">
+        <a href="{% url 'leads:crm_kanban' %}" class="flex flex-col items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition py-3 px-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
             </svg>
             <span class="text-[10px] font-medium tracking-wide">CRM</span>
         </a>
-        <a href="{% url 'accounts:payments_settings' %}" class="flex flex-col items-center gap-1.5 text-slate-400 hover:text-emerald-400 transition py-3 px-4">
+        <a href="{% url 'accounts:payments_settings' %}" class="flex flex-col items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-emerald-500 dark:hover:text-emerald-400 transition py-3 px-4">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
             </svg>
@@ -89,6 +165,113 @@
         </a>
     </div>
     {% endif %}
+
+    <!-- Theme Controller Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const getPreferredTheme = () => {
+                return localStorage.getItem('theme') || 'system';
+            };
+
+            const setTheme = (theme) => {
+                localStorage.setItem('theme', theme);
+                const root = document.documentElement;
+                const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                
+                if (isDark) {
+                    root.classList.add('dark');
+                } else {
+                    root.classList.remove('dark');
+                }
+                
+                // Update all icons and highlights
+                document.querySelectorAll('.theme-toggle-container').forEach(container => {
+                    const lightIcon = container.querySelector('.theme-icon-light');
+                    const darkIcon = container.querySelector('.theme-icon-dark');
+                    const systemIcon = container.querySelector('.theme-icon-system');
+                    
+                    if (lightIcon && darkIcon && systemIcon) {
+                        lightIcon.classList.add('hidden');
+                        darkIcon.classList.add('hidden');
+                        systemIcon.classList.add('hidden');
+                        
+                        if (theme === 'light') {
+                            lightIcon.classList.remove('hidden');
+                        } else if (theme === 'dark') {
+                            darkIcon.classList.remove('hidden');
+                        } else {
+                            systemIcon.classList.remove('hidden');
+                        }
+                    }
+                    
+                    container.querySelectorAll('[data-theme-value]').forEach(btn => {
+                        if (btn.getAttribute('data-theme-value') === theme) {
+                            btn.classList.add('bg-emerald-500/10', 'text-emerald-500');
+                            btn.classList.remove('text-slate-700', 'dark:text-slate-300');
+                        } else {
+                            btn.classList.remove('bg-emerald-500/10', 'text-emerald-500');
+                            btn.classList.add('text-slate-700', 'dark:text-slate-300');
+                        }
+                    });
+                });
+            };
+
+            // Initialize all theme buttons
+            const activeTheme = getPreferredTheme();
+            setTheme(activeTheme);
+
+            // Dropdown controls
+            document.querySelectorAll('.theme-toggle-container').forEach(container => {
+                const btn = container.querySelector('.theme-toggle-btn');
+                const dropdown = container.querySelector('.theme-dropdown');
+
+                if (!btn || !dropdown) return;
+
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isHidden = dropdown.classList.contains('hidden');
+                    
+                    // Close all other dropdowns first
+                    document.querySelectorAll('.theme-dropdown').forEach(d => {
+                        d.classList.add('hidden', 'scale-95', 'opacity-0');
+                        d.classList.remove('scale-100', 'opacity-100');
+                    });
+
+                    if (isHidden) {
+                        dropdown.classList.remove('hidden');
+                        setTimeout(() => {
+                            dropdown.classList.remove('scale-95', 'opacity-0');
+                            dropdown.classList.add('scale-100', 'opacity-100');
+                        }, 10);
+                    }
+                });
+
+                container.querySelectorAll('[data-theme-value]').forEach(optionBtn => {
+                    optionBtn.addEventListener('click', (e) => {
+                        const themeValue = optionBtn.getAttribute('data-theme-value');
+                        setTheme(themeValue);
+                        dropdown.classList.add('hidden', 'scale-95', 'opacity-0');
+                        dropdown.classList.remove('scale-100', 'opacity-100');
+                    });
+                });
+            });
+
+            // Close dropdowns on outside click
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.theme-dropdown').forEach(d => {
+                    d.classList.add('hidden', 'scale-95', 'opacity-0');
+                    d.classList.remove('scale-100', 'opacity-100');
+                });
+            });
+
+            // System theme change listener
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (getPreferredTheme() === 'system') {
+                    setTheme('system');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

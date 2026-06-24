@@ -1,31 +1,31 @@
 {% extends "base.html" %}
 {% block title %}Search Studio - LeadScout AI{% endblock %}
-{% block body_class %}min-h-screen bg-slate-950 text-slate-100{% endblock %}
-{% block wrapper_class %}w-full max-w-lg relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl p-6 md:p-8 shadow-2xl text-white{% endblock %}
+{% block body_class %}min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300{% endblock %}
+{% block wrapper_class %}w-full max-w-lg relative bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl ring-1 ring-slate-200/50 dark:ring-white/10 rounded-2xl p-6 md:p-8 shadow-2xl text-slate-900 dark:text-white transition-all duration-300{% endblock %}
 
 {% block content %}
 <!-- Glow Blob sutil de fundo do formulário -->
-<div class="absolute -inset-1 bg-gradient-to-r from-emerald-500/15 to-green-500/15 rounded-2xl blur-lg pointer-events-none"></div>
+<div class="absolute -inset-1 bg-gradient-to-r from-emerald-500/10 to-green-500/10 dark:from-emerald-500/15 dark:to-green-500/15 rounded-2xl blur-lg pointer-events-none"></div>
 
 <div class="relative space-y-6 z-10">
     <div class="text-center space-y-2">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 ring-1 ring-emerald-500/30 text-emerald-400 mb-2">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 ring-1 ring-emerald-500/30 text-emerald-600 dark:text-emerald-400 mb-2">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
         </div>
-        <h2 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+        <h2 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-slate-200 dark:to-slate-400 bg-clip-text text-transparent">
             Search Studio
         </h2>
-        <p class="text-sm text-slate-400">
+        <p class="text-sm text-slate-550 dark:text-slate-400">
             Encontre leads qualificados locais e audite a presença digital deles.
         </p>
     </div>
 
     <!-- Credit Badge -->
-    <div class="flex justify-between items-center bg-black/40 ring-1 ring-white/5 px-4 py-3 rounded-xl">
-        <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Créditos Disponíveis</span>
-        <span class="inline-flex items-center gap-2 bg-slate-800/50 ring-1 ring-white/10 px-3 py-1.5 rounded-full text-xs font-mono text-slate-300">
+    <div class="flex justify-between items-center bg-slate-100/50 dark:bg-black/40 ring-1 ring-slate-200 dark:ring-white/5 px-4 py-3 rounded-xl">
+        <span class="text-xs font-semibold uppercase tracking-wider text-slate-550 dark:text-slate-400">Créditos Disponíveis</span>
+        <span class="inline-flex items-center gap-2 bg-white dark:bg-slate-800/50 ring-1 ring-slate-200 dark:ring-white/10 px-3 py-1.5 rounded-full text-xs font-mono text-slate-700 dark:text-slate-300">
             <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
             {{ credits_balance }}
         </span>
@@ -33,20 +33,20 @@
 
     {% if error %}
     <div class="p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-start gap-3">
-        <svg class="w-5 h-5 text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 text-rose-555 dark:text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
-        <span class="text-sm text-rose-300 font-medium">{{ error }}</span>
+        <span class="text-sm text-rose-700 dark:text-rose-300 font-medium">{{ error }}</span>
     </div>
     {% endif %}
 
     {% if paywall %}
     <div class="p-6 bg-rose-500/10 ring-1 ring-rose-500/20 rounded-xl text-center space-y-4">
-        <h3 class="text-lg font-bold text-rose-400">Créditos Esgotados!</h3>
-        <p class="text-sm text-slate-400">
+        <h3 class="text-lg font-bold text-rose-555 dark:text-rose-400">Créditos Esgotados!</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400">
             Seus créditos grátis acabaram. Faça o upgrade agora para continuar buscando.
         </p>
-        <a href="{% url 'accounts:payments_settings' %}" class="w-full mt-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-slate-950 font-bold rounded-xl transition duration-200 transform hover:scale-[1.01] shadow-lg shadow-emerald-500/20 text-center block">
+        <a href="{% url 'accounts:payments_settings' %}" class="w-full mt-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-650 hover:from-emerald-600 hover:to-teal-700 text-slate-950 dark:text-white font-bold rounded-xl transition duration-200 transform hover:scale-[1.01] shadow-lg shadow-emerald-500/20 text-center block">
             Fazer Upgrade de Plano
         </a>
     </div>
@@ -54,25 +54,25 @@
     <form method="POST" class="space-y-5">
         {% csrf_token %}
         <div class="space-y-1.5">
-            <label class="block text-sm font-medium text-slate-300">Nicho / Categoria de Negócio</label>
-            <input type="text" name="nicho" placeholder="Ex: Restaurantes, Dentistas, Imobiliárias" required class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:bg-slate-900/50 transition-all">
+            <label class="block text-sm font-medium text-slate-650 dark:text-slate-300">Nicho / Categoria de Negócio</label>
+            <input type="text" name="nicho" placeholder="Ex: Restaurantes, Dentistas, Imobiliárias" required class="w-full bg-slate-100/50 dark:bg-black/50 ring-1 ring-slate-200 dark:ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-slate-900/50 transition-all outline-none">
         </div>
         <div class="space-y-1.5">
-            <label class="block text-sm font-medium text-slate-300">Cidade / Localização</label>
-            <input type="text" name="localizacao" placeholder="Ex: Natal - RN" required class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:bg-slate-900/50 transition-all">
+            <label class="block text-sm font-medium text-slate-650 dark:text-slate-300">Cidade / Localização</label>
+            <input type="text" name="localizacao" placeholder="Ex: Natal - RN" required class="w-full bg-slate-100/50 dark:bg-black/50 ring-1 ring-slate-200 dark:ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-800 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:bg-white dark:focus:bg-slate-900/50 transition-all outline-none">
         </div>
         
         <button type="submit" class="relative group overflow-hidden rounded-lg p-[1px] w-full block mt-6">
             <span class="absolute inset-0 bg-gradient-to-r from-emerald-500 via-lime-400 to-emerald-500 opacity-70 group-hover:opacity-100 transition-opacity duration-300"></span>
-            <div class="relative bg-slate-950 px-4 py-3.5 rounded-[7px] flex items-center justify-center transition-all group-hover:bg-opacity-0">
-                <span class="font-semibold text-white">Realizar Busca (Consome 1 Crédito)</span>
+            <div class="relative bg-slate-50 dark:bg-slate-950 px-4 py-3.5 rounded-[7px] flex items-center justify-center transition-all group-hover:bg-opacity-0">
+                <span class="font-semibold text-slate-800 dark:text-white group-hover:text-white">Realizar Busca (Consome 1 Crédito)</span>
             </div>
         </button>
     </form>
     {% endif %}
 
-    <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
-        <a href="{% url 'accounts:dashboard' %}" class="hover:text-emerald-400 transition flex items-center gap-1">
+    <div class="pt-4 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500">
+        <a href="{% url 'accounts:dashboard' %}" class="hover:text-emerald-500 dark:hover:text-emerald-400 transition flex items-center gap-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
