@@ -1,6 +1,6 @@
 # LeadScout AI V1 Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build and launch LeadScout AI V1, a sales intelligence platform featuring multi-tenant lead scanning, background auditing/scoring, a mini-CRM Kanban board, and AI outreach script generation.
 
@@ -29,7 +29,7 @@
 *   Produces: `Organization` model and `User.organization` reference.
 *   Produces: Updated registration flow that creates an `Organization` and links the new user as `OWNER`.
 
-- [ ] **Step 1: Write the failing tests for multi-tenant onboarding**
+- [x] **Step 1: Write the failing tests for multi-tenant onboarding**
     
     Create `accounts/tests/test_tenancy.py` with:
     ```python
@@ -56,12 +56,12 @@
             self.assertEqual(user.organization.name, "Agência tenant_owner@test.com")
     ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
     
     Run: `python manage.py test accounts.tests.test_tenancy`
     Expected: FAIL due to missing attributes and tables.
 
-- [ ] **Step 3: Implement Organization models and modify User**
+- [x] **Step 3: Implement Organization models and modify User**
     
     Modify `accounts/models.py` to add `Organization`, update `User`, and add the roles:
     ```python
@@ -111,7 +111,7 @@
             return self.email
     ```
 
-- [ ] **Step 4: Update onboarding views and forms**
+- [x] **Step 4: Update onboarding views and forms**
     
     Modify `accounts/forms.py` to make registration clean, and modify `accounts/views.py` (in `register_view` at lines 31-42) to create the organization upon signup:
     ```python
@@ -124,7 +124,7 @@
     user.save()
     ```
 
-- [ ] **Step 5: Run migrations and verify tests pass**
+- [x] **Step 5: Run migrations and verify tests pass**
     
     Run:
     ```bash
@@ -134,7 +134,7 @@
     ```
     Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
     
     Run:
     ```bash
@@ -155,12 +155,12 @@
 *   Produces: `SearchQuery` and `Lead` models.
 *   Produces: `SerperClient.search(nicho, localizacao)` returning parsed raw lead data (name, website, address, phone, place_id).
 
-- [ ] **Step 1: Scaffolding the leads app**
+- [x] **Step 1: Scaffolding the leads app**
     
     Run: `python manage.py startapp leads`
     Add `'leads',` to `INSTALLED_APPS` in `core/settings.py`.
 
-- [ ] **Step 2: Write failing test for Serper Integration**
+- [x] **Step 2: Write failing test for Serper Integration**
     
     Create `leads/tests/test_serper.py` with:
     ```python
@@ -196,7 +196,7 @@
             self.assertTrue(any(r['name'] for r in results))
     ```
 
-- [ ] **Step 3: Implement SearchQuery and Lead Models**
+- [x] **Step 3: Implement SearchQuery and Lead Models**
     
     Write to `leads/models.py`:
     ```python
@@ -235,7 +235,7 @@
             return self.name
     ```
 
-- [ ] **Step 4: Implement SerperClient with Mock Fallback**
+- [x] **Step 4: Implement SerperClient with Mock Fallback**
     
     Create `leads/services.py`:
     ```python
@@ -306,7 +306,7 @@
             ]
     ```
 
-- [ ] **Step 5: Run migrations and verify Serper client tests pass**
+- [x] **Step 5: Run migrations and verify Serper client tests pass**
     
     Run:
     ```bash
@@ -316,7 +316,7 @@
     ```
     Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
     
     Run:
     ```bash
@@ -337,7 +337,7 @@
 *   Produces: `AuditResult` model.
 *   Produces: `AuditService.audit_lead(lead)` performing site analysis, SSL check, and email scraping, then computing the urgency score.
 
-- [ ] **Step 1: Write failing tests for technical audit and score logic**
+- [x] **Step 1: Write failing tests for technical audit and score logic**
     
     Create `leads/tests/test_audit.py` with:
     ```python
@@ -361,12 +361,12 @@
             self.assertTrue(lead.is_hot)
     ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
     
     Run: `python manage.py test leads.tests.test_audit`
     Expected: FAIL due to missing model properties and `AuditService`.
 
-- [ ] **Step 3: Add `AuditResult` to `leads/models.py`**
+- [x] **Step 3: Add `AuditResult` to `leads/models.py`**
     
     Add the `AuditResult` model to `leads/models.py` (if not already added in Task 2):
     ```python
@@ -383,7 +383,7 @@
             return f"Audit for {self.lead.name} (Score: {self.score})"
     ```
 
-- [ ] **Step 4: Implement `AuditService` in `leads/services.py`**
+- [x] **Step 4: Implement `AuditService` in `leads/services.py`**
     
     Append the audit logic and generic domain list to `leads/services.py`:
     ```python
@@ -473,7 +473,7 @@
             return netloc.replace("www.", "")
     ```
 
-- [ ] **Step 5: Run migrations and verify tests pass**
+- [x] **Step 5: Run migrations and verify tests pass**
     
     Run:
     ```bash
@@ -483,7 +483,7 @@
     ```
     Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
     
     Run:
     ```bash
@@ -504,7 +504,7 @@
 *   Produces: `process_search_query_task(search_query_id)` asynchronous worker task.
 *   Produces: Dual scheduler dispatcher inside `leads/views.py`.
 
-- [ ] **Step 1: Write failing tests for asynchronous search processor**
+- [x] **Step 1: Write failing tests for asynchronous search processor**
     
     Create `leads/tests/test_tasks.py` with:
     ```python
@@ -534,12 +534,12 @@
             self.assertIsNotNone(first_lead.audit)
     ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
     
     Run: `python manage.py test leads.tests.test_tasks`
     Expected: FAIL due to missing `leads/tasks.py`.
 
-- [ ] **Step 3: Implement Celery tasks and Python threading engine**
+- [x] **Step 3: Implement Celery tasks and Python threading engine**
     
     Create `leads/tasks.py` to support Celery with fallback:
     ```python
@@ -596,12 +596,12 @@
         thread.start()
     ```
 
-- [ ] **Step 4: Run tests and verify background tasks work**
+- [x] **Step 4: Run tests and verify background tasks work**
     
     Run: `python manage.py test leads.tests.test_tasks`
     Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
     
     Run:
     ```bash
@@ -625,7 +625,7 @@
 *   Produces: `/leads/search/status/<int:query_id>/` (AJAX status endpoint).
 *   Produces: `/leads/search/results/<int:query_id>/` (renders leads table ordered by Score).
 
-- [ ] **Step 1: Write URL mapping in `leads/urls.py` and `core/urls.py`**
+- [x] **Step 1: Write URL mapping in `leads/urls.py` and `core/urls.py`**
     
     Create `leads/urls.py`:
     ```python
@@ -646,7 +646,7 @@
     path("leads/", include("leads.urls")),
     ```
 
-- [ ] **Step 2: Create Views for Search Studio**
+- [x] **Step 2: Create Views for Search Studio**
     
     Add view functions inside `leads/views.py`:
     ```python
@@ -700,7 +700,7 @@
         return render(request, "leads/search_results.html", {"query": query, "leads": leads})
     ```
 
-- [ ] **Step 3: Write HTML templates for Search Studio and Results**
+- [x] **Step 3: Write HTML templates for Search Studio and Results**
     
     Create `templates/leads/search_studio.html` with a beautiful premium dark-mode dashboard card:
     ```html
@@ -737,12 +737,12 @@
 
     Create `templates/leads/search_results.html` displaying leads and their Score.
     
-- [ ] **Step 4: Verify views render correctly**
+- [x] **Step 4: Verify views render correctly**
     
     Run: `python manage.py check`
     Expected: System check identifies no issues.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
     
     Run:
     ```bash
@@ -767,7 +767,7 @@
 *   Produces: `/leads/crm/add-lead/<int:lead_id>/` (Adds lead to pipeline).
 *   Produces: `/leads/crm/update-stage/` (AJAX POST updates card stage).
 
-- [ ] **Step 1: Add PipelineCard to models and run migrations**
+- [x] **Step 1: Add PipelineCard to models and run migrations**
     
     Update `leads/models.py` with `PipelineCard` (from design schema if not migrated yet) and migrate:
     ```bash
@@ -775,7 +775,7 @@
     python manage.py migrate
     ```
 
-- [ ] **Step 2: Write failing test for CRM pipeline operations**
+- [x] **Step 2: Write failing test for CRM pipeline operations**
     
     Create `leads/tests/test_crm.py` with:
     ```python
@@ -795,7 +795,7 @@
             self.assertEqual(card.stage, "NOVO")
     ```
 
-- [ ] **Step 3: Implement CRM views inside `leads/views.py`**
+- [x] **Step 3: Implement CRM views inside `leads/views.py`**
     
     Add Kanban endpoints:
     ```python
@@ -840,7 +840,7 @@
         return JsonResponse({"status": "error"}, status=400)
     ```
 
-- [ ] **Step 4: Create HTML Kanban Board with drag-and-drop support**
+- [x] **Step 4: Create HTML Kanban Board with drag-and-drop support**
     
     Create `templates/leads/crm_kanban.html` with full drag-and-drop HTML5 JS:
     ```html
@@ -894,12 +894,12 @@
     {% endblock %}
     ```
 
-- [ ] **Step 5: Run verification tests**
+- [x] **Step 5: Run verification tests**
     
     Run: `python manage.py test leads.tests.test_crm`
     Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
     
     Run:
     ```bash
@@ -922,7 +922,7 @@
 *   Produces: `/leads/crm/detail/<int:lead_id>/` Detail Modal content view.
 *   Produces: `/leads/crm/generate-script/<int:lead_id>/` Script generator endpoint.
 
-- [ ] **Step 1: Write test for script generation fallback**
+- [x] **Step 1: Write test for script generation fallback**
     
     Create `leads/tests/test_ai.py` with:
     ```python
@@ -944,12 +944,12 @@
             self.assertIn("site", script.lower())
     ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
     
     Run: `python manage.py test leads.tests.test_ai`
     Expected: FAIL due to missing `leads/ai.py`.
 
-- [ ] **Step 3: Implement `AIScriptGenerator` in `leads/ai.py`**
+- [x] **Step 3: Implement `AIScriptGenerator` in `leads/ai.py`**
     
     Create `leads/ai.py`:
     ```python
@@ -1015,7 +1015,7 @@
                        f"Podemos agendar uma breve conversa de 10 minutos nesta semana para alinhar essa melhoria?"
     ```
 
-- [ ] **Step 4: Create lead script generating view**
+- [x] **Step 4: Create lead script generating view**
     
     Add views to `leads/views.py`:
     ```python
@@ -1035,12 +1035,12 @@
         return JsonResponse({"script": script})
     ```
 
-- [ ] **Step 5: Run tests to verify script generator works**
+- [x] **Step 5: Run tests to verify script generator works**
     
     Run: `python manage.py test leads.tests.test_ai`
     Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
     
     Run:
     ```bash
