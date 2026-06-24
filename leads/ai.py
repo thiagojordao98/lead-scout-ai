@@ -9,7 +9,7 @@ class AIScriptGenerator:
     def generate(self, lead) -> str:
         audit = getattr(lead, 'audit', None)
         score = audit.score if audit else 0
-        has_website = audit.has_website if audit else False
+        has_website = bool(lead.website)
         has_ssl = audit.has_ssl if audit else False
         has_professional_email = audit.has_professional_email if audit else False
 

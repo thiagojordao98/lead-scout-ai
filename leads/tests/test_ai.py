@@ -27,7 +27,9 @@ class AITestCase(TestCase):
         self.assertIn("não possui um site institucional próprio", script)
 
     def test_fallback_script_generation_no_ssl(self):
-        # Update audit to have website but no ssl
+        # Update lead and audit to have website but no ssl
+        self.lead.website = "https://restaurantecentral.com"
+        self.lead.save()
         self.audit.has_website = True
         self.audit.has_ssl = False
         self.audit.score = 50
@@ -40,7 +42,9 @@ class AITestCase(TestCase):
         self.assertIn("ausência do certificado de segurança SSL", script)
 
     def test_fallback_script_generation_no_professional_email(self):
-        # Update audit to have website and ssl but no professional email
+        # Update lead and audit to have website and ssl but no professional email
+        self.lead.website = "https://restaurantecentral.com"
+        self.lead.save()
         self.audit.has_website = True
         self.audit.has_ssl = True
         self.audit.has_professional_email = False
@@ -91,6 +95,11 @@ class AITestCase(TestCase):
         data = response.json()
         self.assertIn("script", data)
         self.assertIn("Restaurante Central", data["script"])
+
+    def test_generate_sales_script_view_get_not_allowed(self):
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("leads:generate_sales_script", args=[self.lead.id]))
+        self.assertEqual(response.status_code, 405)
 
     def test_generate_sales_script_view_unauthorized(self):
         response = self.client.post(reverse("leads:generate_sales_script", args=[self.lead.id]))

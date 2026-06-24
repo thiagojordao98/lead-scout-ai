@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 from django.db import transaction
 from .models import SearchQuery, Lead, PipelineCard
@@ -113,6 +114,7 @@ def lead_detail_modal_view(request, lead_id):
 
 
 @login_required
+@require_POST
 def generate_sales_script_view(request, lead_id):
     lead = get_object_or_404(Lead, id=lead_id, organization=request.user.organization)
     generator = AIScriptGenerator()
