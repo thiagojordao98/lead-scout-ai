@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-python manage.py migrate --noinput &&
-python manage.py collectstatic --noinput &
+echo "Rodando migrações do banco..."
+python manage.py migrate --noinput
 
-gunicorn core.wsgi
+echo "Coletando arquivos estáticos..."
+python manage.py collectstatic --noinput
+
+echo "Iniciando servidor Gunicorn..."
+gunicorn core.wsgi --bind 0.0.0.0:8000
