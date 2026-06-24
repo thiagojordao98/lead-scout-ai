@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from unittest.mock import patch
 from accounts.models import Organization
-from leads.models import SearchQuery, Lead, AuditResult, PipelineCard
+from leads.models import SearchQuery, Lead, AuditResult, PipelineCard, IPRequestLog, Feedback
+from plans.models import Plan, UserPlan
 
 User = get_user_model()
 
@@ -184,3 +185,92 @@ class SearchStudioViewsTest(TestCase):
         # Should only contain active_lead
         self.assertEqual(len(leads_in_context), 1)
         self.assertEqual(leads_in_context[0], lead_active)
+
+
+class RateLimitAndFeedbackTests(TestCase):
+    def setUp(self):
+        self.org = Organization.objects.create(name="Free Org", credits_balance=10)
+        self.user = User.objects.create_user(
+            email="free@test.com",
+            password="password123",
+            organization=self.org
+        )
+        
+    @patch("leads.views.dispatch_search_query")
+    def test_rate_limit_free_user(self, mock_dispatch):
+        self.client.force_login(self.user)
+        
+        # Free user starts with 0 IP logs today. Perform 3 requests:
+        for i in range(3):
+            response = self.client.post(reverse("leads:search_studio"), {
+                "nicho": f"Nicho {i}",
+                "localizacao": "Natal - RN"
+            })
+            self.assertEqual(response.status_code, 302) # Redirects on success
+
+        # Verify IPRequestLog count is 3
+        log = IPRequestLog.objects.first()
+        self.assertEqual(log.count, 3)
+
+        # 4th request should trigger limit modal on GET
+        response = self.client.get(reverse("leads:search_studio"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context.get("show_limit_modal"))
+
+        # 4th request on POST should be blocked
+        response = self.client.post(reverse("leads:search_studio"), {
+            "nicho": "Blocked Nicho",
+            "localizacao": "Natal - RN"
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "leads/search_studio.html")
+        self.assertIn("Você atingiu o limite", response.context.get("error", ""))
+        self.assertTrue(response.context.get("show_limit_modal"))
+        self.assertEqual(SearchQuery.objects.count(), 3)
+
+    @patch("leads.views.dispatch_search_query")
+    def test_rate_limit_paid_user(self, mock_dispatch):
+        # Upgrade user to active plan
+        plan = Plan.objects.create(code="STANDARD", name="Standard")
+        UserPlan.objects.create(user=self.user, plan=plan, status="ACTIVE")
+        
+        self.client.force_login(self.user)
+        
+        # Perform 4 searches
+        for i in range(4):
+            response = self.client.post(reverse("leads:search_studio"), {
+                "nicho": f"Nicho {i}",
+                "localizacao": "Natal - RN"
+            })
+            self.assertEqual(response.status_code, 302)
+
+        # No IP logs should be registered since paid user bypasses IP checks
+        self.assertEqual(IPRequestLog.objects.count(), 0)
+        self.assertEqual(SearchQuery.objects.count(), 4)
+
+    def test_submit_feedback_bonus_credits(self):
+        self.client.force_login(self.user)
+        self.assertEqual(self.org.credits_balance, 10)
+        self.assertFalse(self.org.received_feedback_bonus)
+
+        # Submit feedback via AJAX
+        response = self.client.post(reverse("leads:submit_feedback"), {
+            "message": "Ferramenta muito boa!"
+        }, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Feedback.objects.count(), 1)
+        self.org.refresh_from_db()
+        self.assertEqual(self.org.credits_balance, 15)
+        self.assertTrue(self.org.received_feedback_bonus)
+
+        # Submit feedback a second time (should save feedback, but NOT grant credits)
+        response2 = self.client.post(reverse("leads:submit_feedback"), {
+            "message": "Segundo feedback."
+        }, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(response2.status_code, 200)
+        self.assertEqual(Feedback.objects.count(), 2)
+        self.org.refresh_from_db()
+        self.assertEqual(self.org.credits_balance, 15) # Remains 15
+
