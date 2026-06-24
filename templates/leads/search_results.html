@@ -4,12 +4,12 @@
 
 {% block body_class %}min-h-screen bg-slate-950 text-slate-100{% endblock %}
 
-{% block wrapper_class %}w-full max-w-6xl rounded-2xl bg-slate-900 p-8 shadow-2xl border border-slate-800 text-white my-8{% endblock %}
+{% block wrapper_class %}w-full max-w-6xl relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl p-6 md:p-8 shadow-2xl text-white my-8{% endblock %}
 
 {% block content %}
 <div class="space-y-8">
     <!-- Header -->
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800 pb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-white/10 pb-6">
         <div>
             <div class="flex items-center gap-2 text-xs font-semibold text-indigo-400 uppercase tracking-wider mb-1.5">
                 <span class="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>
@@ -23,10 +23,10 @@
             </p>
         </div>
         <div class="flex items-center gap-3">
-            <a href="{% url 'leads:search_studio' %}" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-sm font-semibold rounded-xl border border-slate-700/60 transition duration-200">
+            <a href="{% url 'leads:search_studio' %}" class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-sm font-semibold rounded-xl border border-slate-700/60 transition duration-200">
                 Nova Busca
             </a>
-            <a href="{% url 'accounts:dashboard' %}" class="px-5 py-2.5 bg-slate-950 hover:bg-slate-900 text-sm font-semibold text-slate-300 rounded-xl border border-slate-800 transition duration-200">
+            <a href="{% url 'accounts:dashboard' %}" class="px-5 py-3 bg-slate-950 hover:bg-slate-900 text-sm font-semibold text-slate-300 rounded-xl border border-slate-800 transition duration-200">
                 Dashboard
             </a>
         </div>
@@ -185,7 +185,7 @@
             </div>
 
             <!-- Score e Ação CRM -->
-            <div class="flex items-center justify-between md:justify-end gap-5 pt-4 md:pt-0 border-t md:border-0 border-slate-800">
+            <div class="flex items-center justify-between md:justify-end gap-5 pt-4 md:pt-0 border-t md:border-0 border-white/10">
                 <!-- Score Badge flutuante/alinhado -->
                 <div class="flex flex-col items-start md:items-center">
                     <span class="text-[9px] uppercase tracking-wider text-slate-500 font-bold mb-1">Score</span>
@@ -204,11 +204,11 @@
                 <!-- Ação CRM -->
                 <div>
                     {% if lead.pipeline_card %}
-                    <a href="{% url 'leads:crm_kanban' %}" class="inline-flex items-center gap-1 px-4 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-xl border border-emerald-500/20 transition duration-150">
+                    <a href="{% url 'leads:crm_kanban' %}" class="inline-flex items-center gap-1 px-4 py-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-xl border border-emerald-500/20 transition duration-150">
                         Ver no CRM
                     </a>
                     {% else %}
-                    <a href="{% url 'leads:add_to_pipeline' lead.id %}" class="inline-flex items-center gap-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-sm transition duration-150">
+                    <a href="{% url 'leads:add_to_pipeline' lead.id %}" class="inline-flex items-center gap-1 px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-sm transition duration-150">
                         Adicionar ao CRM
                     </a>
                     {% endif %}
