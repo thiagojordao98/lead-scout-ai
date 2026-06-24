@@ -5,11 +5,11 @@
 
 {% block content %}
 <!-- Glow Blob sutil de fundo do formulário -->
-<div class="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-2xl blur-lg pointer-events-none"></div>
+<div class="absolute -inset-1 bg-gradient-to-r from-emerald-500/15 to-green-500/15 rounded-2xl blur-lg pointer-events-none"></div>
 
 <div class="relative space-y-6 z-10">
     <div class="text-center space-y-2">
-        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-indigo-500/10 ring-1 ring-indigo-500/30 text-indigo-400 mb-2">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 ring-1 ring-emerald-500/30 text-emerald-400 mb-2">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
@@ -55,15 +55,15 @@
         {% csrf_token %}
         <div class="space-y-1.5">
             <label class="block text-sm font-medium text-slate-300">Nicho / Categoria de Negócio</label>
-            <input type="text" name="nicho" placeholder="Ex: Restaurantes, Dentistas, Imobiliárias" required class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900/50 transition-all">
+            <input type="text" name="nicho" placeholder="Ex: Restaurantes, Dentistas, Imobiliárias" required class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:bg-slate-900/50 transition-all">
         </div>
         <div class="space-y-1.5">
             <label class="block text-sm font-medium text-slate-300">Cidade / Localização</label>
-            <input type="text" name="localizacao" placeholder="Ex: Natal - RN" required class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900/50 transition-all">
+            <input type="text" name="localizacao" placeholder="Ex: Natal - RN" required class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:bg-slate-900/50 transition-all">
         </div>
         
         <button type="submit" class="relative group overflow-hidden rounded-lg p-[1px] w-full block mt-6">
-            <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 opacity-70 group-hover:opacity-100 transition-opacity duration-300"></span>
+            <span class="absolute inset-0 bg-gradient-to-r from-emerald-500 via-lime-400 to-emerald-500 opacity-70 group-hover:opacity-100 transition-opacity duration-300"></span>
             <div class="relative bg-slate-950 px-4 py-3.5 rounded-[7px] flex items-center justify-center transition-all group-hover:bg-opacity-0">
                 <span class="font-semibold text-white">Realizar Busca (Consome 1 Crédito)</span>
             </div>
@@ -72,7 +72,7 @@
     {% endif %}
 
     <div class="pt-4 border-t border-slate-800 flex justify-between items-center text-xs text-slate-500">
-        <a href="{% url 'accounts:dashboard' %}" class="hover:text-indigo-400 transition flex items-center gap-1">
+        <a href="{% url 'accounts:dashboard' %}" class="hover:text-emerald-400 transition flex items-center gap-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>

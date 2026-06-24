@@ -22,7 +22,7 @@
             id="{{ form.email.id_for_label }}"
             value="{{ form.email.value|default:'' }}"
             required
-            class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900/50 transition-all outline-none"
+            class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:bg-slate-900/50 transition-all outline-none"
             placeholder="seu@email.com"
         >
         {% if form.email.errors %}
@@ -41,7 +41,7 @@
             name="{{ form.password.name }}"
             id="{{ form.password.id_for_label }}"
             required
-            class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 focus:bg-slate-900/50 transition-all outline-none"
+            class="w-full bg-black/50 ring-1 ring-white/5 border-0 rounded-lg px-4 py-3 text-slate-200 placeholder-slate-500 focus:ring-2 focus:ring-emerald-500 focus:bg-slate-900/50 transition-all outline-none"
             placeholder="••••••••"
         >
         {% if form.password.errors %}
@@ -52,7 +52,7 @@
     </div>
 
     <button type="submit" class="relative group overflow-hidden rounded-lg p-[1px] w-full block mt-6">
-        <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 opacity-70 group-hover:opacity-100 transition-opacity duration-300"></span>
+        <span class="absolute inset-0 bg-gradient-to-r from-emerald-500 via-lime-400 to-emerald-500 opacity-70 group-hover:opacity-100 transition-opacity duration-300"></span>
         <div class="relative bg-slate-950 px-4 py-3 rounded-[7px] flex items-center justify-center transition-all group-hover:bg-opacity-0">
             <span class="font-semibold text-white">Entrar</span>
         </div>
@@ -62,13 +62,11 @@
 <div class="mt-6 space-y-2 border-t border-white/5 pt-4 text-sm text-slate-400">
     <p>
         Ainda não tem conta?
-        <a class="font-medium text-indigo-400 hover:text-indigo-300 transition hover:underline" href="{% url 'accounts:register' %}">Cadastre-se</a>
+        <a class="font-medium text-emerald-400 hover:text-emerald-300 transition hover:underline" href="{% url 'accounts:register' %}">Cadastre-se</a>
     </p>
     <p>
         Esqueceu a senha?
-        <a class="font-medium text-indigo-400 hover:text-indigo-300 transition hover:underline" href="{% url 'accounts:password_reset' %}">Recuperar senha</a>
+        <a class="font-medium text-emerald-400 hover:text-emerald-300 transition hover:underline" href="{% url 'accounts:password_reset' %}">Recuperar senha</a>
     </p>
 </div>
 {% endblock %}
-
-
