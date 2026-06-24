@@ -2,7 +2,7 @@
      draggable="true" 
      ondragstart="drag(event, '{{ card.id }}')" 
      ondragend="dragEnd(event)"
-     onclick="if(!event.target.closest('a') && !event.target.closest('select')) openLeadDetail('{{ card.lead.id }}')"
+     onclick="if(!event.target.closest('a') && !event.target.closest('select') && !event.target.closest('label')) openLeadDetail('{{ card.lead.id }}')"
      id="card-{{ card.id }}"
      data-stage="{{ card.stage }}">
     
