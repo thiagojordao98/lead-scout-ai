@@ -7,6 +7,7 @@ from .managers import UserManager
 class Organization(models.Model):
     name = models.CharField(max_length=255)
     credits_balance = models.PositiveIntegerField(default=10)
+    received_feedback_bonus = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

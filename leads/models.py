@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 from accounts.models import Organization
 
 class SearchQuery(models.Model):
@@ -64,5 +65,26 @@ class PipelineCard(models.Model):
 
     def __str__(self):
         return f"{self.lead.name} - {self.stage}"
+
+
+class IPRequestLog(models.Model):
+    ip_address = models.GenericIPAddressField()
+    date = models.DateField(default=timezone.localdate)
+    count = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('ip_address', 'date')
+
+    def __str__(self):
+        return f"{self.ip_address} on {self.date}: {self.count}"
+
+
+class Feedback(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='feedbacks')
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Feedback from {self.user.email} at {self.created_at}"
 
 
