@@ -32,11 +32,30 @@
         </div>
     </div>
 
+    <!-- Mobile Tab Navigation -->
+    <div class="flex space-x-2 overflow-x-auto scrollbar-none pb-4 md:hidden" id="mobile-tabs-container">
+        <button onclick="switchTab('NOVO')" id="tab-NOVO" class="flex-shrink-0 px-4 py-3 bg-indigo-600 text-white text-xs font-bold rounded-lg transition-all shadow-md">
+            Novo ({{ stages.NOVO|length }})
+        </button>
+        <button onclick="switchTab('CONTATO')" id="tab-CONTATO" class="flex-shrink-0 px-4 py-3 bg-slate-900 text-slate-400 text-xs font-bold rounded-lg transition-all">
+            Contato ({{ stages.CONTATO|length }})
+        </button>
+        <button onclick="switchTab('NEGOCIACAO')" id="tab-NEGOCIACAO" class="flex-shrink-0 px-4 py-3 bg-slate-900 text-slate-400 text-xs font-bold rounded-lg transition-all">
+            Negociação ({{ stages.NEGOCIACAO|length }})
+        </button>
+        <button onclick="switchTab('FECHADO')" id="tab-FECHADO" class="flex-shrink-0 px-4 py-3 bg-slate-900 text-slate-400 text-xs font-bold rounded-lg transition-all">
+            Fechado ({{ stages.FECHADO|length }})
+        </button>
+        <button onclick="switchTab('PERDIDO')" id="tab-PERDIDO" class="flex-shrink-0 px-4 py-3 bg-slate-900 text-slate-400 text-xs font-bold rounded-lg transition-all">
+            Perdido ({{ stages.PERDIDO|length }})
+        </button>
+    </div>
+
     <!-- Kanban Board Grid -->
     <div class="grid grid-cols-1 md:grid-cols-5 gap-5 overflow-x-auto pb-4">
         
         <!-- NOVO Column -->
-        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+        <div class="bg-slate-900/30 p-4 rounded-xl ring-1 ring-white/5 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column hidden md:flex"
              id="col-NOVO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'NOVO')">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2">
@@ -55,7 +74,7 @@
         </div>
 
         <!-- CONTATO Column -->
-        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+        <div class="bg-slate-900/30 p-4 rounded-xl ring-1 ring-white/5 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column hidden md:flex"
              id="col-CONTATO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'CONTATO')">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2">
@@ -74,7 +93,7 @@
         </div>
 
         <!-- NEGOCIACAO Column -->
-        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+        <div class="bg-slate-900/30 p-4 rounded-xl ring-1 ring-white/5 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column hidden md:flex"
              id="col-NEGOCIACAO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'NEGOCIACAO')">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2">
@@ -93,7 +112,7 @@
         </div>
 
         <!-- FECHADO Column -->
-        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+        <div class="bg-slate-900/30 p-4 rounded-xl ring-1 ring-white/5 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column hidden md:flex"
              id="col-FECHADO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'FECHADO')">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2">
@@ -112,7 +131,7 @@
         </div>
 
         <!-- PERDIDO Column -->
-        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-800/80 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column"
+        <div class="bg-slate-900/30 p-4 rounded-xl ring-1 ring-white/5 min-h-[500px] flex flex-col space-y-4 transition duration-250 kanban-column hidden md:flex"
              id="col-PERDIDO" ondragover="allowDrop(event)" ondragleave="dragLeave(event)" ondrop="drop(event, 'PERDIDO')">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div class="flex items-center gap-2">
@@ -240,6 +259,67 @@
             }
         } catch (err) {
             console.error("Erro ao abrir modal do lead:", err);
+        }
+    }
+
+    let activeTab = 'NOVO';
+
+    function switchTab(stageCode) {
+        activeTab = stageCode;
+        const stages = ['NOVO', 'CONTATO', 'NEGOCIACAO', 'FECHADO', 'PERDIDO'];
+        
+        stages.forEach(code => {
+            const col = document.getElementById("col-" + code);
+            const tabBtn = document.getElementById("tab-" + code);
+            
+            if (code === stageCode) {
+                col.classList.remove('hidden');
+                col.classList.add('flex');
+                
+                tabBtn.classList.remove('bg-slate-900', 'text-slate-400');
+                tabBtn.classList.add('bg-indigo-600', 'text-white', 'shadow-md');
+            } else {
+                col.classList.remove('flex');
+                col.classList.add('hidden');
+                
+                tabBtn.classList.remove('bg-indigo-600', 'text-white', 'shadow-md');
+                tabBtn.classList.add('bg-slate-900', 'text-slate-400');
+            }
+        });
+    }
+
+    // Executar inicialização do mobile tab
+    document.addEventListener("DOMContentLoaded", () => {
+        if (window.innerWidth < 768) {
+            switchTab('NOVO');
+        }
+    });
+
+    async function updateStageDirectly(cardId, stageCode) {
+        const cardEl = document.getElementById("card-" + cardId);
+        if (!cardEl) return;
+        
+        const formData = new FormData();
+        formData.append("card_id", cardId);
+        formData.append("stage", stageCode);
+        formData.append("csrfmiddlewaretoken", "{{ csrf_token }}");
+        
+        try {
+            const response = await fetch("{% url 'leads:update_stage' %}", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            if (response.ok) {
+                window.location.reload(); // Recarrega para reposicionar
+            } else {
+                throw new Error("Erro");
+            }
+        } catch (err) {
+            console.error("Erro ao mover lead:", err);
+            window.location.reload();
         }
     }
 </script>

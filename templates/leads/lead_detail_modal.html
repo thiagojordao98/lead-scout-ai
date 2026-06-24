@@ -1,5 +1,5 @@
 <div id="lead-modal-backdrop" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto" onclick="handleBackdropClick(event)">
-    <div class="bg-slate-900 border border-slate-800/80 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden relative animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
+    <div class="bg-slate-900 border border-white/10 rounded-2xl max-w-2xl w-full shadow-2xl overflow-hidden relative animate-in fade-in zoom-in-95 duration-200" onclick="event.stopPropagation()">
         <!-- Close Button -->
         <button onclick="closeLeadModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800" title="Fechar">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,11 +199,14 @@
                         </svg>
                         Abordagem Comercial (AI)
                     </span>
-                    <button id="btn-generate-script" onclick="generateAIScript('{{ lead.id }}')" class="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-[11px] font-bold text-white rounded-lg transition duration-150 flex items-center gap-1.5 shadow-md shadow-indigo-600/10">
-                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z" />
-                        </svg>
-                        Gerar Script
+                    <button id="btn-generate-script" onclick="generateAIScript('{{ lead.id }}')" class="relative group overflow-hidden rounded-lg p-[1px] shadow-md shadow-indigo-600/10">
+                        <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 opacity-80 group-hover:opacity-100 transition-opacity duration-300"></span>
+                        <div class="relative bg-slate-950 px-3.5 py-3 rounded-[7px] flex items-center justify-center gap-1.5 transition-all group-hover:bg-opacity-0">
+                            <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z" />
+                            </svg>
+                            <span class="font-bold text-[11px] text-white">Gerar Roteiro</span>
+                        </div>
                     </button>
                 </div>
 
