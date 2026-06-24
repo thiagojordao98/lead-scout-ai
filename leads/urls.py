@@ -12,4 +12,5 @@ urlpatterns = [
     path("crm/update-stage/", views.update_card_stage_view, name="update_stage"),
     path("crm/detail/<int:lead_id>/", views.lead_detail_modal_view, name="lead_detail_modal"),
     path("crm/generate-script/<int:lead_id>/", views.generate_sales_script_view, name="generate_sales_script"),
+    path("feedback/", views.submit_feedback_view, name="submit_feedback"),
 ]
