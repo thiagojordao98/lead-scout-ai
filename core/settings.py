@@ -16,7 +16,7 @@ LOG_DIR.mkdir(exist_ok=True)
 SECRET_KEY = 'django-insecure-069=w%%ihcq28f8t5rr)!w2b9l1j+lbj@d$u5ns7lt3d7t##x0'
 DEBUG = config('DEBUG', cast=bool)
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://*.railway.app']
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', default='https://*.railway.app').split(',')
 
 # Application definition
 
