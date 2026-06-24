@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}LeadScout AI - Encontre Leads e Audite Presença Digital{% endblock %}
+{% block wrapper_class %}w-full max-w-5xl bg-transparent p-0 shadow-none ring-0 border-0 text-white{% endblock %}
+{% block content %}
+<div class="space-y-24 py-12">
+    <!-- Hero Section -->
+    <section class="text-center px-4 pt-16 pb-12 relative">
+        <!-- Glow Blob sutil atrás do Hero -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none"></div>
+        
+        <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 max-w-4xl mx-auto">
+            Encontre leads qualificados e audite a presença digital deles em segundos
+        </h1>
+        <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mt-6">
+            O LeadScout AI varre o Google Maps, analisa certificados SSL, detecta e-mails comerciais e automatiza seu processo de prospecção fria.
+        </p>
+        <div class="mt-10 max-w-xs mx-auto">
+            <a href="{% url 'accounts:register' %}" class="relative group overflow-hidden rounded-lg p-[1px] w-full block shadow-[0_0_30px_rgba(79,70,229,0.3)] transition hover:shadow-indigo-500/40">
+                <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 via-fuchsia-500 to-indigo-500 opacity-90 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <div class="relative bg-slate-950 px-6 py-4 rounded-[7px] flex items-center justify-center transition-all group-hover:bg-opacity-0">
+                    <span class="font-bold text-white text-base">Começar Agora Grátis</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Como Funciona Grid -->
+    <section class="space-y-12">
+        <div class="text-center space-y-3">
+            <h2 class="text-3xl font-bold tracking-tight">Como Funciona o Mecanismo</h2>
+            <p class="text-slate-400 max-w-md mx-auto">Do nicho de mercado à abordagem comercial em 3 passos simples.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Passo 1 -->
+            <div class="relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl p-6 shadow-2xl space-y-4">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/30 text-indigo-400 text-sm font-bold">1</div>
+                <h3 class="text-lg font-bold">Buscar Negócios Locais</h3>
+                <p class="text-slate-400 text-sm">Insira o nicho e a cidade. Nosso sistema busca diretamente no Google Maps os melhores resultados da região.</p>
+            </div>
+            <!-- Passo 2 -->
+            <div class="relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl p-6 shadow-2xl space-y-4">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/30 text-indigo-400 text-sm font-bold">2</div>
+                <h3 class="text-lg font-bold">Auditar Presença Digital</h3>
+                <p class="text-slate-400 text-sm">Analisamos automaticamente se o site possui SSL, se usa e-mails profissionais e calculamos um Score de Urgência.</p>
+            </div>
+            <!-- Passo 3 -->
+            <div class="relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl p-6 shadow-2xl space-y-4">
+                <div class="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-indigo-500/10 ring-1 ring-indigo-500/30 text-indigo-400 text-sm font-bold">3</div>
+                <h3 class="text-lg font-bold">Gerar Script com IA</h3>
+                <p class="text-slate-400 text-sm">Crie um roteiro de abordagem fria ultra-personalizado utilizando IA baseado nos erros e falhas encontrados na auditoria.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Preços -->
+    <section class="space-y-12 pb-12">
+        <div class="text-center space-y-3">
+            <h2 class="text-3xl font-bold tracking-tight">Planos Simples e Claros</h2>
+            <p class="text-slate-400 max-w-md mx-auto">Escolha o plano ideal para a sua escala de prospecção.</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <!-- Básico -->
+            <div class="relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl p-6 shadow-2xl flex flex-col justify-between">
+                <div>
+                    <h4 class="text-slate-400 font-bold uppercase text-xs tracking-wider">Start</h4>
+                    <div class="mt-4 text-3xl font-black text-white">R$ 0</div>
+                    <p class="text-xs text-slate-500 mt-1">Créditos de testes gratuitos</p>
+                    <ul class="mt-6 space-y-3 text-sm text-slate-300">
+                        <li class="flex items-center gap-2">✓ 10 créditos de busca</li>
+                        <li class="flex items-center gap-2">✓ Auditoria técnica básica</li>
+                        <li class="flex items-center gap-2">✓ Mini-CRM Integrado</li>
+                    </ul>
+                </div>
+                <a href="{% url 'accounts:register' %}" class="w-full mt-8 py-3 bg-slate-800 hover:bg-slate-700 font-semibold text-sm rounded-lg text-center transition">Cadastrar Grátis</a>
+            </div>
+
+            <!-- Pro -->
+            <div class="relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-indigo-500/30 rounded-2xl p-6 shadow-2xl flex flex-col justify-between">
+                <!-- Glow Blob absoluto por trás do Plano Pro -->
+                <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-fuchsia-500 rounded-2xl blur opacity-20 pointer-events-none"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex justify-between items-center">
+                        <h4 class="text-indigo-400 font-bold uppercase text-xs tracking-wider">Pro</h4>
+                        <span class="bg-indigo-500/10 ring-1 ring-indigo-500/30 text-indigo-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full">RECOMENDADO</span>
+                    </div>
+                    <div class="mt-4 text-3xl font-black text-white">R$ 97<span class="text-sm font-normal text-slate-400">/mês</span></div>
+                    <p class="text-xs text-indigo-400/80 mt-1">Acesso ilimitado de buscas</p>
+                    <ul class="mt-6 space-y-3 text-sm text-slate-300">
+                        <li class="flex items-center gap-2">✓ Buscas ilimitadas diárias</li>
+                        <li class="flex items-center gap-2">✓ Gerador de scripts com IA</li>
+                        <li class="flex items-center gap-2">✓ Suporte prioritário via chat</li>
+                        <li class="flex items-center gap-2">✓ Exportação em formato CSV</li>
+                    </ul>
+                </div>
+                <a href="{% url 'accounts:register' %}" class="relative z-10 w-full mt-8 py-3 bg-gradient-to-r from-indigo-500 to-fuchsia-500 text-white font-bold text-sm rounded-lg text-center transition shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30">Adquirir Plano Pro</a>
+            </div>
+
+            <!-- Agência -->
+            <div class="relative bg-slate-900/80 backdrop-blur-xl ring-1 ring-white/10 rounded-2xl p-6 shadow-2xl flex flex-col justify-between">
+                <div>
+                    <h4 class="text-slate-400 font-bold uppercase text-xs tracking-wider">Agência</h4>
+                    <div class="mt-4 text-3xl font-black text-white">R$ 297<span class="text-sm font-normal text-slate-400">/mês</span></div>
+                    <p class="text-xs text-slate-500 mt-1">Para equipes e múltiplos agentes</p>
+                    <ul class="mt-6 space-y-3 text-sm text-slate-300">
+                        <li class="flex items-center gap-2">✓ Tudo do plano Pro</li>
+                        <li class="flex items-center gap-2">✓ Até 5 sub-contas de membros</li>
+                        <li class="flex items-center gap-2">✓ Integração Webhook e Zapier</li>
+                        <li class="flex items-center gap-2">✓ APIs de busca dedicadas</li>
+                    </ul>
+                </div>
+                <a href="{% url 'accounts:register' %}" class="w-full mt-8 py-3 bg-slate-800 hover:bg-slate-700 font-semibold text-sm rounded-lg text-center transition">Falar com Consultor</a>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
