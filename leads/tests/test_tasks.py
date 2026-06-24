@@ -9,7 +9,17 @@ class TaskExecutionTest(TransactionTestCase):
     def setUp(self):
         self.org = Organization.objects.create(name="Async Agency")
         
-    def test_background_task_creates_leads_and_audits(self):
+    @patch('leads.services.SerperClient.search')
+    def test_background_task_creates_leads_and_audits(self, mock_search):
+        mock_search.return_value = [
+            {
+                "place_id": "test_place_1",
+                "name": "Test Dental",
+                "website": "https://testdental.com",
+                "phone": "123456",
+                "address": "123 St"
+            }
+        ]
         query = SearchQuery.objects.create(
             organization=self.org,
             nicho="Dentista",
@@ -43,7 +53,17 @@ class TaskExecutionTest(TransactionTestCase):
         query.refresh_from_db()
         self.assertEqual(query.status, "FAILED")
 
-    def test_dispatch_search_query(self):
+    @patch('leads.services.SerperClient.search')
+    def test_dispatch_search_query(self, mock_search):
+        mock_search.return_value = [
+            {
+                "place_id": "test_place_1",
+                "name": "Test Dental",
+                "website": "https://testdental.com",
+                "phone": "123456",
+                "address": "123 St"
+            }
+        ]
         query = SearchQuery.objects.create(
             organization=self.org,
             nicho="Dentista",

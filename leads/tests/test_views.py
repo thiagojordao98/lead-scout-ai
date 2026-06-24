@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from unittest.mock import patch
 from accounts.models import Organization
-from leads.models import SearchQuery, Lead, AuditResult
+from leads.models import SearchQuery, Lead, AuditResult, PipelineCard
 
 User = get_user_model()
 
@@ -156,3 +156,31 @@ class SearchStudioViewsTest(TestCase):
         )
         response = self.client.get(reverse("leads:search_results", args=[query.id]))
         self.assertEqual(response.status_code, 404)
+
+    def test_search_results_view_excludes_leads_in_crm(self):
+        self.client.force_login(self.user1)
+        query = SearchQuery.objects.create(
+            organization=self.org1,
+            user=self.user1,
+            nicho="Restaurantes",
+            localizacao="Natal - RN",
+            status="COMPLETED"
+        )
+        
+        # Create two leads
+        lead_active = Lead.objects.create(organization=self.org1, search_query=query, name="Active Lead")
+        AuditResult.objects.create(lead=lead_active, score=50)
+        
+        lead_in_crm = Lead.objects.create(organization=self.org1, search_query=query, name="Lead in CRM")
+        AuditResult.objects.create(lead=lead_in_crm, score=70)
+        
+        # Add one lead to CRM
+        PipelineCard.objects.create(organization=self.org1, lead=lead_in_crm, stage="NOVO")
+
+        response = self.client.get(reverse("leads:search_results", args=[query.id]))
+        self.assertEqual(response.status_code, 200)
+        
+        leads_in_context = list(response.context["leads"])
+        # Should only contain active_lead
+        self.assertEqual(len(leads_in_context), 1)
+        self.assertEqual(leads_in_context[0], lead_active)

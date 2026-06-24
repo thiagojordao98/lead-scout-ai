@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from accounts.models import Organization
-from leads.models import Lead, PipelineCard
+from leads.models import Lead, PipelineCard, SearchQuery
 
 User = get_user_model()
 
@@ -58,6 +58,25 @@ class CRMTestCase(TestCase):
         response = self.client.get(reverse("leads:add_to_pipeline", args=[self.lead1.id]))
         # Should redirect to CRM Kanban
         self.assertRedirects(response, reverse("leads:crm_kanban"))
+        
+        # Verify card is created
+        self.assertTrue(PipelineCard.objects.filter(lead=self.lead1, organization=self.org1, stage="NOVO").exists())
+
+    def test_add_to_pipeline_with_search_query_redirects_to_search_results(self):
+        self.client.force_login(self.user1)
+        query = SearchQuery.objects.create(
+            organization=self.org1,
+            user=self.user1,
+            nicho="Restaurantes",
+            localizacao="Natal - RN",
+            status="COMPLETED"
+        )
+        self.lead1.search_query = query
+        self.lead1.save()
+        
+        response = self.client.get(reverse("leads:add_to_pipeline", args=[self.lead1.id]))
+        # Should redirect to search results page
+        self.assertRedirects(response, reverse("leads:search_results", args=[query.id]))
         
         # Verify card is created
         self.assertTrue(PipelineCard.objects.filter(lead=self.lead1, organization=self.org1, stage="NOVO").exists())
