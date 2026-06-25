@@ -16,9 +16,9 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-*}
       - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
-      - PGDATABASE=${PGDATABASE}
-      - PGUSER=${PGUSER}
-      - PGPASSWORD=${PGPASSWORD}
+      - PGDATABASE=${PGDATABASE:-postgres}
+      - PGUSER=${PGUSER:-postgres}
+      - PGPASSWORD=${PGPASSWORD:-postgres}
       - PGHOST=db
       - PGPORT=5432
       - SERPER_API_KEY=${SERPER_API_KEY}
@@ -31,13 +31,13 @@ services:
     image: postgres:16-alpine
     restart: always
     environment:
-      - POSTGRES_DB=${PGDATABASE}
-      - POSTGRES_USER=${PGUSER}
-      - POSTGRES_PASSWORD=${PGPASSWORD}
+      - POSTGRES_DB=${PGDATABASE:-postgres}
+      - POSTGRES_USER=${PGUSER:-postgres}
+      - POSTGRES_PASSWORD=${PGPASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${PGUSER} -d $${PGDATABASE}"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
